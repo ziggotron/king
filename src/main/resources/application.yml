@@ -1,0 +1,39 @@
+server:
+  port: 9001
+spring:
+  database:
+    driverClassName: org.mysql.jdbc.Driver
+  datasource:
+    url: jdbc:mysql://ask.ucd.ie/king
+    userName: asksql
+    password: eK7K@r8e3V
+    platform: mysql
+    tomcat:
+      test-while-idle: true
+      validation-interval: 5000
+      max-wait: 10000
+      max-active: 50
+      test-on-borrow: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+security:
+  user:
+    password: password
+logging:
+  level:
+    ROOT: INFO
+    com:
+      recommenderx: TRACE
+    org:
+      hibernate: INFO
+      springframework:
+        web: INFO
+        security: INFO
+        web-security: INFO

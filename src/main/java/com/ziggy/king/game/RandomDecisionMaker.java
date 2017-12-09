@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.ziggy.king.model.Card;
-import com.ziggy.king.model.GamePick;
-import com.ziggy.king.model.GameType;
-import com.ziggy.king.model.Player;
-import com.ziggy.king.model.Suit;
+import com.ziggy.king.game.model.Card;
+import com.ziggy.king.game.model.GamePick;
+import com.ziggy.king.game.model.GameType;
+import com.ziggy.king.game.model.Player;
+import com.ziggy.king.game.model.Suit;
 
 public class RandomDecisionMaker implements DecisionMaker {
 

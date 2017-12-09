@@ -2,10 +2,10 @@ package com.ziggy.king.game;
 
 import java.util.List;
 
-import com.ziggy.king.model.Card;
-import com.ziggy.king.model.GameType;
-import com.ziggy.king.model.Player;
-import com.ziggy.king.model.Suit;
+import com.ziggy.king.game.model.Card;
+import com.ziggy.king.game.model.GameType;
+import com.ziggy.king.game.model.Player;
+import com.ziggy.king.game.model.Suit;
 
 public interface DecisionMaker {
 	public GameType getGameType(Player player);

@@ -9,11 +9,11 @@ import java.util.Set;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.ziggy.king.model.Card;
-import com.ziggy.king.model.Face;
-import com.ziggy.king.model.Pair;
-import com.ziggy.king.model.Suit;
-import com.ziggy.king.model.Trick;
+import com.ziggy.king.game.model.Card;
+import com.ziggy.king.game.model.Face;
+import com.ziggy.king.game.model.Pair;
+import com.ziggy.king.game.model.Suit;
+import com.ziggy.king.game.model.Trick;
 
 public class KingUtil {
 

@@ -6,15 +6,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ziggy.king.model.Card;
-import com.ziggy.king.model.Face;
-import com.ziggy.king.model.GamePick;
-import com.ziggy.king.model.GameState;
-import com.ziggy.king.model.GameType;
-import com.ziggy.king.model.Pair;
-import com.ziggy.king.model.Player;
-import com.ziggy.king.model.Suit;
-import com.ziggy.king.model.Trick;
+import com.ziggy.king.game.model.Card;
+import com.ziggy.king.game.model.Face;
+import com.ziggy.king.game.model.GamePick;
+import com.ziggy.king.game.model.GameState;
+import com.ziggy.king.game.model.GameType;
+import com.ziggy.king.game.model.Pair;
+import com.ziggy.king.game.model.Player;
+import com.ziggy.king.game.model.Suit;
+import com.ziggy.king.game.model.Trick;
 import com.ziggy.king.util.KingUtil;
 
 public class RuleMonger {

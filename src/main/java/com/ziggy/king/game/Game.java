@@ -14,18 +14,18 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.ziggy.king.db.model.RoundStats;
-import com.ziggy.king.db.model.User;
-import com.ziggy.king.model.Card;
-import com.ziggy.king.model.GameAction;
-import com.ziggy.king.model.GameActionType;
-import com.ziggy.king.model.GamePick;
-import com.ziggy.king.model.GameState;
-import com.ziggy.king.model.GameType;
-import com.ziggy.king.model.Pair;
-import com.ziggy.king.model.Player;
-import com.ziggy.king.model.Suit;
-import com.ziggy.king.model.Trick;
+import com.ziggy.king.game.model.Card;
+import com.ziggy.king.game.model.GameAction;
+import com.ziggy.king.game.model.GameActionType;
+import com.ziggy.king.game.model.GamePick;
+import com.ziggy.king.game.model.GameState;
+import com.ziggy.king.game.model.GameType;
+import com.ziggy.king.game.model.Pair;
+import com.ziggy.king.game.model.Player;
+import com.ziggy.king.game.model.Suit;
+import com.ziggy.king.game.model.Trick;
+import com.ziggy.king.model.RoundStats;
+import com.ziggy.king.model.User;
 
 public class Game {
 	private String gameId;
