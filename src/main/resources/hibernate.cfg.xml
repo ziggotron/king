@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+	<session-factory>
+	
+		<property name="javax.persistence.validation.mode">none</property>
+
+		<!-- SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+		
+		<property name="hibernate.connection.useUnicode">true</property> 
+		<property name="hibernate.connection.characterEncoding">utf8</property> 
+
+		<!-- Disable the second-level cache -->
+		<property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+
+		<property name="hibernate.connection.provider_class">org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider</property>
+
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">false</property>
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+
+		<mapping class="com.ziggy.king.db.model.GameDB" />
+		<mapping class="com.ziggy.king.db.model.RoundStats" />
+		<mapping class="com.ziggy.king.db.model.User" />
+
+	</session-factory>
+
+</hibernate-configuration>

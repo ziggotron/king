@@ -1,0 +1,1 @@
+pscp -i %HOMEDRIVE%%HOMEPATH%\.ssh\id_dsa.ppk target/king-web.war target/dependency/jetty-runner.jar ziggy@ask.ucd.ie:/home/ziggy/deployments/king/
