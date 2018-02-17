@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.websocket.server.PathParam;
 
@@ -38,14 +38,22 @@ public class GameController extends BaseController {
 	@Autowired
 	private UserService userService;
 
+	@RequestMapping(path = "/games", method = RequestMethod.POST)
+	public List<Game> getGames() {
+		User user = getContextUser();
+		List<Game> myGames = games.values().stream().filter(g -> g.getState().getPlayerForUser(user) != null).collect(Collectors.toList());
+		logger.info(_info("Returning %d games for user %s", myGames.size(), user.getName()));
+		return myGames;
+	}
+
 	// Every player polls this method every second. We wait until everyone has the
 	// same game state, as indicated by the current stateID and the stateID
 	// provided in the posted JSON. When everyone is in sync, we advance the
 	// automated steps. If the next anticipated step is a player action, we just
 	// do nothing until it happens
-	@RequestMapping(path = "/game/{id}", method = RequestMethod.POST)
+	@RequestMapping(path = "/games/{id}", method = RequestMethod.POST)
 	public synchronized String getState(@PathVariable("id") String gameId, StateRequest stateRequest) {
-		User user = getCurrentUser();
+		User user = getContextUser();
 
 		// if there is no game, just start one
 		Game game = games.get(gameId);
@@ -117,11 +125,11 @@ public class GameController extends BaseController {
 	 * pick trump, pick discards and play card). Each one has associated data (game
 	 * type, trump suit, or cards to discard/play).
 	 **/
-	@RequestMapping(path = "/game/{id}/move", method = RequestMethod.POST)
+	@RequestMapping(path = "/games/{id}/move", method = RequestMethod.POST)
 	public synchronized String makeMove(@PathParam("id") String gameId, String json) {
 		logger.trace("Player move submitted: " + json);
 
-		User user = getCurrentUser();
+		User user = getContextUser();
 
 		// if there is no game, no moves are valid
 		Game game = games.get(gameId);
@@ -197,11 +205,4 @@ public class GameController extends BaseController {
 		}
 	}
 
-	@RequestMapping("/resource")
-	public Map<String, Object> home() {
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("id", UUID.randomUUID().toString());
-		model.put("content", "Hello World");
-		return model;
-	}
 }

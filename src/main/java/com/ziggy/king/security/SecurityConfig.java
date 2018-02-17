@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -18,7 +17,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
 		auth.authenticationProvider(authenticationProvider());
 	}
 
@@ -26,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(new BCryptPasswordEncoder(11));
+		authProvider.setPasswordEncoder(new BCryptPasswordEncoder());
 		return authProvider;
 	}
 
@@ -38,11 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     		"/index.html",
     		"/home.html",
     		"/login.html",
+    		"/app.html",
     		"/",
     		"/home",
-    		"/login")
+    		"/login",
+    		"/logout")
     .permitAll().anyRequest().authenticated()
-    .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());;
+    .and().csrf().disable().logout();
 		// @formatter:on
 	}
 

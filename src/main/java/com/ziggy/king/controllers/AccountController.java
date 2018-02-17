@@ -16,8 +16,10 @@ public class AccountController extends BaseController {
 	@RequestMapping(path = "/profile")
 	public User getProfile() {
 		logger.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-		User user = getCurrentUser();
-		logger.info(_info("Serving profile information for %s", user.getName()));
+		User user = getContextUser();
+		if (user != null) {
+			logger.info(_info("Serving profile information for %s", user.getName()));
+		}
 		return user;
 	}
 }

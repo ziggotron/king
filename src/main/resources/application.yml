@@ -30,10 +30,10 @@ logging:
   level:
     ROOT: INFO
     com:
-      recommenderx: TRACE
+      ziggy: TRACE
     org:
       hibernate: INFO
       springframework:
         web: INFO
         security: INFO
-        web-security: INFO
+        web-security: TRACE
