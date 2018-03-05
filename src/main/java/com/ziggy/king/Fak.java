@@ -1,8 +1,6 @@
 package com.ziggy.king;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Fak {
 
@@ -140,7 +138,7 @@ public class Fak {
 
 	public static String pp(BigInteger num, BigInteger big, String str) {
 		BigInteger rem = num.mod(big).multiply(k).divide(big);
-		return fs(num.divide(big).toString(), 3, " ") + "." + s(rem.toString(), 3, "0") + str;
+		return fs(num.divide(big).toString(), 3, " ") + "." + fs(rem.toString(), 3, "0") + str;
 	}
 
 	public static String s(Object so, int c, String p) {

@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class FakUpgrades {
 
+	public static final String SCIENCE_SOURCE = "science-redux.txt";
+
 	public static final List<String> potatoes = new ArrayList<>(Arrays.asList(new String[] { "FARMERS", "COMMUNES", "COLLECTIVES", "PLANTATIONS", "HIVES" }));
 	public static final List<String> land = new ArrayList<>(Arrays.asList(new String[] { "WORKERS", "BLASTING", "CLEARCUT", "ROADS", "HIGHWAYS" }));
 	public static final List<String> ores = new ArrayList<>(Arrays.asList(new String[] { "MINERS", "MINES", "EXCAVATORS", "MEGAMINES", "BORES" }));
@@ -30,18 +32,26 @@ public class FakUpgrades {
 
 	public static ObjectMapper mapper = new ObjectMapper();
 
+	// public static final List<Set<Upgrade>> burned = new ArrayList<>();
+
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-		String valueItem = "IND-ORE";
-		Boolean includeAlternatives = true;
-		Integer budget = 3100;
-		Integer printSize = 1;
-		Boolean minimalPrint = false;
-		List<Integer> excludedIds = new ArrayList<>(Arrays.asList(new Integer[] {}));
+		final String valueItem = "BTN-LND";
+		final Boolean includeAlternatives = true;
+		final Integer budget = 230;
+		final Integer printSize = 1;
+		final Boolean minimalPrint = false;
+		final List<Integer> excludedIds = new ArrayList<>(Arrays.asList(new Integer[] { 23, 30, 38, 65, 87, 90, 99, 122, 136, 137, 197 }));
 
 		FakUpgrades util = new FakUpgrades();
 		List<Upgrade> upgrades = util.loadUpgrades();
+
+		Map<String, Integer> cntmp = new HashMap<>();
+		upgrades.forEach(u -> cntmp.put(u.getIndustry(), cntmp.get(u.getIndustry()) == null ? 1 : cntmp.get(u.getIndustry()) + 1));
+		for (String k : cntmp.keySet()) {
+			System.out.println(k + " x " + cntmp.get(k));
+		}
 
 		List<Upgrade> filtered = util.findByItem(upgrades, includeAlternatives, valueItem);
 		System.out.println(filtered.size() + " potential upgrades found\n");
@@ -61,6 +71,35 @@ public class FakUpgrades {
 		List<Set<Upgrade>> bestCombos = util.getBest(filtered, includeAlternatives, valueItem, budget, printSize);
 		System.out.println(bestCombos.size() + " combos found");
 		util.printCombos(bestCombos, valueItem, includeAlternatives, printSize, minimalPrint);
+
+		// Collections.sort(burned, new Comparator<Set<Upgrade>>() {
+		// @Override
+		// public int compare(Set<Upgrade> o1, Set<Upgrade> o2) {
+		// BigInteger multi = util.getMultiplier(o1, valueItem, includeAlternatives);
+		// BigInteger multi2 = util.getMultiplier(o2, valueItem, includeAlternatives);
+		//
+		// Integer cost = util.getCost(o1);
+		// Integer cost2 = util.getCost(o2);
+		// int c = multi2.compareTo(multi);
+		// if (c == 0) {
+		// c = cost.compareTo(cost2);
+		// }
+		//
+		// return c;
+		// }
+		// });
+		//
+		// for (int i = 0; i < 10 && i < burned.size(); ++i) {
+		// Set<Upgrade> set = burned.get(i);
+		// System.out.println(String.format("Burned %d with %s multiplier ",
+		// util.getCost(set), util.getMultiplier(upgrades, valueItem,
+		// includeAlternatives).toString()));
+		// util.printCombo(set, valueItem, includeAlternatives, true);
+		// }
+
+		if (excludedIds.size() > 0) {
+			System.out.println("\n\n\n----------------------------------------\n\n\nYou got exclusions, homie\n\n\n----------------------------------------\n\n\n");
+		}
 	}
 
 	public List<Set<Upgrade>> getBest(List<Upgrade> upgrades, Boolean includeAlternatives, String valueItem, Integer budget, Integer count) {
@@ -113,6 +152,7 @@ public class FakUpgrades {
 
 		// trimSets(carry, hypotheticals);
 		carry.removeAll(toBurn);
+		// burned.addAll(toBurn);
 		carry.addAll(hypotheticals);
 
 		if (hypotheticals.size() > 0) {
@@ -144,12 +184,12 @@ public class FakUpgrades {
 		return cost;
 	}
 
-	public Long getMultiplier(Collection<Upgrade> upgrades, String highlighItem, boolean includeAlternatives) {
-		Long multi = 1L;
+	public BigInteger getMultiplier(Collection<Upgrade> upgrades, String highlighItem, boolean includeAlternatives) {
+		BigInteger multi = new BigInteger("1");
 		for (Upgrade u : upgrades) {
 			for (UpgradeItem ui : u.getPositive()) {
 				if (itemMatches(highlighItem, includeAlternatives, ui.getItem())) {
-					multi *= ui.getMultiplier();
+					multi = multi.multiply(new BigInteger("" + ui.getMultiplier()));
 				}
 			}
 		}
@@ -180,13 +220,13 @@ public class FakUpgrades {
 	}
 
 	public void printUpgrades(List<Upgrade> upgrades, String valueItem, boolean minimal) {
-		Long mmulti = 1L;
+		BigInteger mmulti = new BigInteger("1");
 		if (minimal) {
 			for (Upgrade u : upgrades) {
 				for (UpgradeItem ui : u.getPositive()) {
 					if (itemMatches(valueItem, true, ui.getItem())) {
-						mmulti *= ui.getMultiplier();
-						System.out.println(String.format("%s %4d / %3d %0$-15s %,20d", u.getIndustry(), Integer.parseInt(u.getCost()), ui.getMultiplier(), ui.getItem(), mmulti));
+						mmulti = mmulti.multiply(new BigInteger("" + ui.getMultiplier()));
+						System.out.println(String.format("%s %4d / %3d %0$-15s %s", u.getIndustry(), Integer.parseInt(u.getCost()), ui.getMultiplier(), ui.getItem(), mmulti.toString()));
 					}
 				}
 			}
@@ -265,7 +305,7 @@ public class FakUpgrades {
 
 	public List<Upgrade> loadUpgrades() throws IOException, URISyntaxException {
 		List<Upgrade> res = new ArrayList<>();
-		List<String> lines = Files.readAllLines(Paths.get(new File("science-redux.txt").toURI()));
+		List<String> lines = Files.readAllLines(Paths.get(new File(SCIENCE_SOURCE).toURI()));
 
 		String hostIndustry = "";
 		Upgrade upgrade = null;
@@ -361,8 +401,12 @@ public class FakUpgrades {
 			return u.getId().equals(getId());
 		}
 
+		public int hashCode() {
+			return getId().hashCode();
+		}
+
 		public String toString() {
-			String s = String.format("\n-----\n%s\n%s science\n", getIndustry(), getCost());
+			String s = String.format("\n-----\n%s - %d\n%s science\n", getIndustry(), getId(), getCost());
 			for (UpgradeItem pos : getPositive()) {
 				s += String.format("x%d %s\n", pos.getMultiplier(), pos.getItem());
 			}
@@ -457,23 +501,9 @@ public class FakUpgrades {
 
 		@Override
 		public int compare(Set<Upgrade> o1, Set<Upgrade> o2) {
-			Integer multiplier1 = 1;
-			for (Upgrade u : o1) {
-				for (UpgradeItem ui : u.getPositive()) {
-					if (itemMatches(valueItem, includeAlternatives, ui.getItem())) {
-						multiplier1 *= ui.getMultiplier();
-					}
-				}
-			}
+			BigInteger multiplier1 = new FakUpgrades().getMultiplier(o1, valueItem, includeAlternatives);
+			BigInteger multiplier2 = new FakUpgrades().getMultiplier(o2, valueItem, includeAlternatives);
 
-			Integer multiplier2 = 1;
-			for (Upgrade u : o2) {
-				for (UpgradeItem ui : u.getPositive()) {
-					if (itemMatches(valueItem, includeAlternatives, ui.getItem())) {
-						multiplier2 *= ui.getMultiplier();
-					}
-				}
-			}
 			int c = multiplier2.compareTo(multiplier1);
 			if (c == 0) {
 				Integer co1 = 0;
